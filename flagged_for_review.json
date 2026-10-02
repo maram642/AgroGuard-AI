@@ -1,0 +1,23 @@
+[
+  {
+    "chunk_id": "citrus::fruit_and_leaf_spot",
+    "management_issues": [
+      "Reduce overuse of irrigation practices."
+    ],
+    "preventive_issues": []
+  },
+  {
+    "chunk_id": "tomato::septoria_leaf_blotch",
+    "management_issues": [
+      "careful attention to the timing of irrigation to reduce the length of time during which the plants remain wet"
+    ],
+    "preventive_issues": []
+  },
+  {
+    "chunk_id": "wheat::septoria_leaf_blotch",
+    "management_issues": [],
+    "preventive_issues": [
+      "long rainless intervals with high temperatures can interrupt disease progress"
+    ]
+  }
+]
