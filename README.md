@@ -1,13 +1,16 @@
-🌱 Plant Disease Diagnosis & Treatment Recommendation System
+# 🌱 Plant Disease Diagnosis & Treatment Recommendation System
 
-An AI-powered system for plant disease diagnosis support and context-aware treatment recommendations, developed as the Generative AI and integration component of a larger plant disease diagnosis workflow.
+An AI-powered system for **plant disease diagnosis support and context-aware treatment recommendations**, developed as the Generative AI and integration component of a larger plant disease diagnosis workflow.
 
-The system combines document extraction, OCR, table extraction, knowledge distillation, pesticide treatment matching, multilingual processing, vector search, RAG, and a FastAPI service to transform agricultural documentation into structured and searchable recommendations.
+The system combines **document extraction, OCR, table extraction, knowledge distillation, pesticide treatment matching, multilingual processing, vector search, RAG, and a FastAPI service** to transform agricultural documentation into structured and searchable recommendations.
 
-📌 Overview
+---
+
+## 📌 Overview
 
 The system is designed to support a complete plant disease diagnosis workflow:
 
+```text
 Plant Image
      │
      ▼
@@ -58,7 +61,7 @@ Document Extraction
         └── Table Extraction
         │
         ▼
-extracted/
+     extracted/
         │
         ├──────────────────────┐
         ▼                      ▼
@@ -68,7 +71,7 @@ Disease Distillation     Pesticide Matching
 distilled_mistral/       pesticide_treatment_matches.xlsx
                                │
                                ▼
-                     Manual Review / Correction
+                    Manual Review / Correction
                                │
                                ▼
                 pesticide_treatment_matches_final.xlsx
@@ -90,20 +93,20 @@ distilled_mistral/       pesticide_treatment_matches.xlsx
               FAISS Index
                    │
                    ▼
-             RAG Engine
+               RAG Engine
                    │
                    ▼
-             FastAPI API
+               FastAPI API
                    │
                    ▼
-            Recommendations
+             Recommendations
 📄 1. Document Extraction & Preprocessing
 
 The original agricultural documents are processed through a dedicated extraction pipeline located in extractors/.
 
 The extraction stage is designed to handle both text-based and scanned agricultural documents.
 
-Text extraction
+Text Extraction
 
 text_extractor.py uses PyMuPDF to extract text from PDF documents page by page.
 
@@ -130,9 +133,10 @@ This avoids unnecessarily OCRing pages that already contain usable text.
 
 OCR language is selected according to document type:
 
-Disease documents   → English
-Pesticide documents → French + Arabic
-Table extraction
+Document type	OCR language
+Disease documents	English
+Pesticide documents	French + Arabic
+Table Extraction
 
 table_extractor.py extracts agricultural tables using:
 
@@ -145,18 +149,20 @@ Otherwise, pdfplumber is used as the fallback.
 
 Additional filtering removes fragments that do not represent meaningful tables:
 
-Minimum rows:    3
-Minimum columns: 2
+Parameter	Value
+Minimum rows	3
+Minimum columns	2
+Camelot minimum accuracy	80%
 
 Merged-cell values are also forward-filled when necessary.
 
-Page-level integration
+Page-Level Integration
 
 pipeline.py combines:
 
-extracted text
+Extracted text
 OCR results
-extracted tables
+Extracted tables
 
 into a structured JSON representation for every source document.
 
@@ -172,7 +178,7 @@ Each page records information such as:
 The resulting files are stored in:
 
 extracted/
-OCR quality auditing
+OCR Quality Auditing
 
 audit_ocr_failures.py checks OCR pages whose resulting text contains fewer than 20 characters.
 
@@ -198,11 +204,11 @@ Chemical products, brands, dosages, and application rates are intentionally excl
 
 This keeps:
 
-Disease knowledge
+Disease Knowledge
 
 separate from:
 
-Pesticide treatment information
+Pesticide Treatment Information
 
 Long documents are processed in chunks, and the resulting structured information is merged and deduplicated.
 
@@ -396,7 +402,7 @@ It accepts:
 crop
 disease
 language
-Example request
+Example Request
 curl -X 'POST' \
   'http://127.0.0.1:8000/recommend' \
   -H 'accept: */*' \
@@ -406,7 +412,7 @@ curl -X 'POST' \
   "disease": "powedry mildew",
   "language": "fr"
 }'
-Example response
+Example Response
 {
   "crop": "tomato",
   "disease": "powedry mildew",
@@ -439,26 +445,26 @@ Example response
   ]
 }
 
-The response combines:
+The response combines three main categories of information.
 
-Treatment information
+Treatment Information
 Product
 Active substance
 Dosage
 Homologation
 Usage
 Treatment confidence
-Disease information
+Disease Information
 General disease management
 Preventive advice
-Matching information
+Matching Information
 Match type
 Matching confidence
 Approximate-match indicator
 Matched crop
 Matched disease
 Source chunk IDs
-User guidance
+User Guidance
 Warnings
 Clarification requirements
 Possible disease options
@@ -529,13 +535,13 @@ plant-internship-rag/
 
 The complete processing workflow is:
 
-1. Extract documents
+1. Extract Documents
 python extractors/pipeline.py
-2. Audit OCR results
+2. Audit OCR Results
 python extractors/audit_ocr_failures.py
-3. Distill disease knowledge
+3. Distill Disease Knowledge
 python distill.py
-4. Match pesticide treatments
+4. Match Pesticide Treatments
 python match_pesticide_treatments.py
 
 Review and correct the generated treatment file:
@@ -545,11 +551,11 @@ pesticide_treatment_matches.xlsx
 The validated version should be saved as:
 
 pesticide_treatment_matches_final.xlsx
-5. Build the knowledge base
+5. Build the Knowledge Base
 python build_chunks.py
-6. Precompute translations
+6. Precompute Translations
 python precompute_translations.py
-7. Build the vector index
+7. Build the Vector Index
 python build_index.py
 8. Start the API
 python api.py
@@ -558,7 +564,7 @@ The API will then be available at:
 
 http://127.0.0.1:8000
 
-and the interactive documentation at:
+Interactive documentation:
 
 http://127.0.0.1:8000/docs
 🛠️ 13. Technologies
@@ -595,13 +601,13 @@ GitHub
 VS Code
 🎯 14. Design Principles
 
-The system was designed around several principles:
+The system was designed around several principles.
 
-Structured knowledge before retrieval
+Structured Knowledge Before Retrieval
 
 Raw agricultural documents are first transformed into structured disease and treatment information before being indexed.
 
-Separation of disease and pesticide knowledge
+Separation of Disease and Pesticide Knowledge
 
 General disease management and preventive advice are kept separate from chemical treatment information.
 
@@ -609,23 +615,23 @@ Selective OCR
 
 OCR is applied only when normal PDF text extraction is insufficient.
 
-Table-aware extraction
+Table-Aware Extraction
 
 Agricultural pesticide catalogs often contain structured tables, so table extraction is handled separately from normal text extraction.
 
-Human validation
+Human Validation
 
 Extracted pesticide treatment information is reviewed and corrected before being used to construct the final knowledge base.
 
-Multilingual processing
+Multilingual Processing
 
 The system supports agricultural information in multiple languages and prepares management and preventive information in English and French.
 
-Traceable retrieval
+Traceable Retrieval
 
 The API returns source chunk identifiers and matching information, making it possible to understand which knowledge-base entry was used.
 
-Local AI components
+Local AI Components
 
 The main language-model processing is performed locally through Ollama, while the vector index is stored locally using FAISS.
 
@@ -653,7 +659,16 @@ RAG Recommendation Engine
   ├── Preventive Advice
   └── Pesticide Treatments
 
-The system therefore connects computer vision, agricultural knowledge extraction, NLP, vector retrieval, and API integration into a single recommendation workflow.
+The system therefore connects:
+
+Computer vision
+Agricultural knowledge extraction
+NLP
+Vector retrieval
+RAG
+API integration
+
+into a single recommendation workflow.
 
 👩‍💻 Author
 
@@ -663,4 +678,5 @@ Data Engineering & AI Engineering Student
 ENET'Com — Tunisia
 
 GitHub: @maram642
+
 
